@@ -9,8 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private Intent myServiceIntent;
@@ -22,24 +23,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
-        startService();
+
+
+        Button btnStart = (Button) findViewById(R.id.btnStart);
+        btnStart.setOnClickListener(this);
+
+        Button btnStop = (Button) findViewById(R.id.btnStop);
+        btnStop.setOnClickListener(this);
+
     }
 
     public void startService()
     {
-       //if(!Variables.serviceStarted) {
             myServiceIntent = new Intent(this, MyService.class);
             startService(myServiceIntent);
-        //}
+
+    }
+
+    public void stopService()
+    {
+        myServiceIntent = new Intent(this, MyService.class);
+        stopService(myServiceIntent);
     }
 
     @Override
@@ -62,5 +67,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if(v.getId() == R.id.btnStart) {
+            startService();
+        }
+        else if (v.getId() == R.id.btnStop) {
+            stopService();
+        }
+
     }
 }

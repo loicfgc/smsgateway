@@ -43,6 +43,7 @@ public class MyService extends IntentService
     public void onDestroy()
     {
         super.onDestroy();
+        server.stop();
         Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
         if(myBootReceiver != null) unregisterReceiver(myBootReceiver);
     }

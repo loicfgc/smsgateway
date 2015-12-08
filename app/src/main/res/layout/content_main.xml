@@ -12,8 +12,19 @@
     tools:context="com.simplesmsgw.smsgateway.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Start"
+        android:id="@+id/btnStart"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:id="@+id/btnStop"
+        android:layout_below="@+id/btnStart"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
