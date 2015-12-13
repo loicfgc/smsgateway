@@ -14,6 +14,8 @@ public class MyHTTPD extends NanoHTTPD {
 
     private final static int PORT = 8080;
     private final static String PASSWORD = "Password";
+    private final static int LIMIT = 10;
+    private int number = 1;
 
     public MyHTTPD() throws IOException {
         super(PORT);
@@ -35,23 +37,25 @@ public class MyHTTPD extends NanoHTTPD {
 
             if(password.equals(PASSWORD)) {
 
-                //send SMS
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(numero, null, message, null, null);
+                if(number <= LIMIT) {
+                    //send SMS
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(numero, null, message, null, null);
 
-                String msg = "<html><body><h1>SMSGateway</h1>\n";
-                msg += "<p>Send SMS to " + numero + "</p>";
-                return newFixedLengthResponse( msg + "</body></html>\n" );
+                    String msg = "Send OK : " + number + "/" + LIMIT;
+                    number++;
+
+                    return newFixedLengthResponse(msg);
+                }
+                else {
+                    return newFixedLengthResponse("Bloqued by limit " + LIMIT);
+                }
             }else {
-                String msg = "<html><body><h1>SMSGateway</h1>\n";
-                msg += "<p>Bad password</p>";
-                return newFixedLengthResponse( msg + "</body></html>\n" );
+                return newFixedLengthResponse("Bad password");
             }
         }
         catch (Exception e) {
-            String msg = "<html><body><h1>SMSGateway</h1>\n";
-            msg += "<p>Error: " + e.toString() + "</p>";
-            return newFixedLengthResponse( msg + "</body></html>\n" );
+            return newFixedLengthResponse(e.toString());
         }
     }
 }
