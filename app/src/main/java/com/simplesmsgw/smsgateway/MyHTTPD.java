@@ -6,15 +6,12 @@ import android.util.Log;
 
 import java.io.IOException;
 
-/**
- * Created by erkan.valentin on 04/12/2015.
- */
 public class MyHTTPD extends NanoHTTPD {
     private Handler handler;
 
-    private final static int PORT = 8080;
-    private final static String PASSWORD = "Password";
-    private final static int LIMIT = 10;
+    public static int PORT;
+    public static String PASSWORD;
+    public static int LIMIT;
     private int number = 1;
 
     public MyHTTPD() throws IOException {

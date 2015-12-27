@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Settings" >
+        <EditTextPreference
+            android:defaultValue="8080"
+            android:key="port"
+            android:summary="Listen port"
+            android:title="Port" />
+
+        <EditTextPreference
+            android:defaultValue="Password"
+            android:key="password"
+            android:summary="Password"
+            android:title="Password" />
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:key="limit"
+            android:summary="Limit of SMS"
+            android:title="Limit" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="onboot"
+            android:summary="Start on boot"
+            android:title="Start on boot" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
