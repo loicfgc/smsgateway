@@ -16,6 +16,7 @@ public class MyPreferenceActivity extends PreferenceActivity implements Preferen
         bindPreferenceSummaryToValue(findPreference("port"));
         bindPreferenceSummaryToValue(findPreference("password"));
         bindPreferenceSummaryToValue(findPreference("limit"));
+        bindPreferenceSummaryToValue(findPreference("server"));
     }
 
     /**

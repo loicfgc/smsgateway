@@ -3,13 +3,17 @@ package com.simplesmsgw.smsgateway;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
+import android.text.format.Formatter;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Intent myServiceIntent;
 
     private static final int PREF = 20;
+    boolean stop = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +37,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(this);
 
-        Button btnStop = (Button) findViewById(R.id.btnStop);
-        btnStop.setOnClickListener(this);
 
         getPref();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     public void getPref() {
@@ -43,14 +49,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int port = Integer.parseInt(pref.getString("port", 8080 + ""));
         String password = pref.getString("password", "Password");
         int limit = Integer.parseInt(pref.getString("limit", 100 + ""));
+        String server = pref.getString("server", "127.0.0.1:8888");
 
         MyHTTPD.PORT = port;
         MyHTTPD.PASSWORD = password;
         MyHTTPD.LIMIT = limit;
+        MyHTTPD.SERVER = server;
 
-        String numero = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
-        TextView tvUrl = (TextView) findViewById(R.id.tvURL);
-        tvUrl.setText("http://127.0.0.1:"+port+"/?numero="+numero+"&password="+password+"&message=HelloWorld");
+        //get Wifi IP
+        String ipAddress = "127.0.0.1";
+        WifiManager wifiMgr = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        if(wifiMgr != null) {
+            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+            int ip = wifiInfo.getIpAddress();
+            ipAddress = String.format("%d.%d.%d.%d", (ip & 0xff),(ip >> 8 & 0xff),(ip >> 16 & 0xff),(ip >> 24 & 0xff));
+        }
+
+        TextView tvOutgoing = (TextView) findViewById(R.id.tvOutgoing);
+        tvOutgoing.setText("OUTGOING: GET http://"+ipAddress+":"+port+"/send?password="+password+"&toNum=[num]&message=[message]");
+
+        TextView tvIncoming = (TextView) findViewById(R.id.tvIncoming);
+        tvIncoming.setText("INCOMING : GET http://"+MyHTTPD.SERVER+"/receive?fromNum=[num]&message=[message]");
     }
 
     public void startService() {
@@ -100,10 +119,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         if(v.getId() == R.id.btnStart) {
-            startService();
+            if(stop) {
+                startService();
+                ((Button) findViewById(R.id.btnStart)).setText("Stop");
+                stop = false;
+            }
+            else {
+                stopService();
+                ((Button) findViewById(R.id.btnStart)).setText("Start");
+                stop = true;
+            }
+
         }
-        else if (v.getId() == R.id.btnStop) {
-            stopService();
-        }
+
     }
 }

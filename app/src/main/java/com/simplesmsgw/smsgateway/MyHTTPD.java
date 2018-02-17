@@ -12,7 +12,8 @@ public class MyHTTPD extends NanoHTTPD {
     public static int PORT;
     public static String PASSWORD;
     public static int LIMIT;
-    private int number = 1;
+    public static String SERVER;
+    private int number = 0;
 
     public MyHTTPD() throws IOException {
         super(PORT);
@@ -25,30 +26,41 @@ public class MyHTTPD extends NanoHTTPD {
         Log.d("SERVER","Get a request: " + session.toString());
 
         try {
-            String numero = session.getParms().get("numero");
-            String password = session.getParms().get("password");
-            String message = session.getParms().get("message");
-            Log.d("SERVER","Numero: " + numero);
-            Log.d("SERVER","Password: " + password);
-            Log.d("SERVER","Message: " + message);
 
-            if(password.equals(PASSWORD)) {
+            if(session.getUri().compareTo("/send") == 0) {
 
-                if(number <= LIMIT) {
-                    //send SMS
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(numero, null, message, null, null);
+                String toNum = session.getParms().get("toNum");
+                String password = session.getParms().get("password");
+                String message = session.getParms().get("message");
+                Log.d("SERVER","toNum: " + toNum);
+                Log.d("SERVER","password: " + password);
+                Log.d("SERVER","message: " + message);
 
-                    String msg = "Send OK : " + number + "/" + LIMIT;
-                    number++;
+                if(password.equals(PASSWORD)) {
 
-                    return newFixedLengthResponse(msg);
+                    if(number <= LIMIT) {
+                        //send SMS
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(toNum, null, message, null, null);
+
+                        String msg = "OK : " + number + "/" + LIMIT;
+                        number++;
+
+                        return newFixedLengthResponse(msg);
+                    }
+                    else {
+                        return newFixedLengthResponse("ERROR: limit reached " + LIMIT);
+                    }
+                }else {
+                    return newFixedLengthResponse("ERROR: Bad password");
                 }
-                else {
-                    return newFixedLengthResponse("Bloqued by limit " + LIMIT);
-                }
-            }else {
-                return newFixedLengthResponse("Bad password");
+            }
+            else if (session.getUri().compareTo("/info") == 0) {
+                return newFixedLengthResponse("SMS sent: " + number + "/" + LIMIT);
+            }
+
+            else {
+                return newFixedLengthResponse("ERROR: Bad request");
             }
         }
         catch (Exception e) {

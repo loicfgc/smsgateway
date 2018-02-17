@@ -16,10 +16,12 @@ public class MyBootReceiver extends BroadcastReceiver
         int port = Integer.parseInt(pref.getString("port", 8080 + ""));
         String password = pref.getString("password", "Password");
         int limit = Integer.parseInt(pref.getString("limit", 100 + ""));
+        String server = pref.getString("server", "127.0.0.1:8888");
 
         MyHTTPD.PORT = port;
         MyHTTPD.PASSWORD = password;
         MyHTTPD.LIMIT = limit;
+        MyHTTPD.SERVER = server;
 
         if(onboot) {
             Intent serviceIntent = new Intent(context, MyService.class);

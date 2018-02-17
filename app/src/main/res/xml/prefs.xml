@@ -20,6 +20,12 @@
             android:summary="Limit of SMS"
             android:title="Limit" />
 
+        <EditTextPreference
+            android:defaultValue="127.0.0.1:8888"
+            android:key="server"
+            android:summary="IP of server for incoming SMS"
+            android:title="Server" />
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="onboot"
