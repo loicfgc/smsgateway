@@ -5,6 +5,10 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import fi.iki.elonen.NanoHTTPD;
 
 public class MyHTTPD extends NanoHTTPD {
     private Handler handler;
@@ -29,16 +33,17 @@ public class MyHTTPD extends NanoHTTPD {
 
             if(session.getUri().compareTo("/send") == 0) {
 
-                String toNum = session.getParms().get("toNum");
-                String password = session.getParms().get("password");
-                String message = session.getParms().get("message");
+                Map<String, List<String>> decodedQueryParameters = decodeParameters(session.getQueryParameterString());
+                String toNum = decodedQueryParameters.get("toNum").get(0);
+                String password = decodedQueryParameters.get("password").get(0);
+                String message = decodedQueryParameters.get("message").get(0);
                 Log.d("SERVER","toNum: " + toNum);
                 Log.d("SERVER","password: " + password);
                 Log.d("SERVER","message: " + message);
 
                 if(password.equals(PASSWORD)) {
 
-                    if(number <= LIMIT) {
+                    if(number <= LIMIT || LIMIT == 0) {
                         //send SMS
                         SmsManager smsManager = SmsManager.getDefault();
                         smsManager.sendTextMessage(toNum, null, message, null, null);
