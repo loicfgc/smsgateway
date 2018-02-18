@@ -5,4 +5,4 @@
 
 ## Usage:
 
- * http://ip:8080/?numero=numero&password=Password&message=message
+ * http://ip:8080/send?password=Password&toNum=[num]&message=[message]
