@@ -1,9 +1,7 @@
 package com.simplesmsgw.smsgateway;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -11,7 +9,7 @@ import java.io.IOException;
 
 public class MyService extends IntentService
 {
-    private BroadcastReceiver myBootReceiver;
+
     private static MyService myHTTPDService;
 
     private MyHTTPD server;
@@ -45,18 +43,12 @@ public class MyService extends IntentService
         super.onDestroy();
         server.stop();
         Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
-        if(myBootReceiver != null) unregisterReceiver(myBootReceiver);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Toast.makeText(this, "Service starting", Toast.LENGTH_SHORT).show();
-        IntentFilter filter = new IntentFilter();
-
-        filter.addAction(Intent.ACTION_BOOT_COMPLETED);
-        myBootReceiver = new MyBootReceiver();
-        registerReceiver(myBootReceiver, filter);
 
         try {
             server = new MyHTTPD();

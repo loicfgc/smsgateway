@@ -1,19 +1,13 @@
 package com.simplesmsgw.smsgateway;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
-import android.text.format.Formatter;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +17,6 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Intent myServiceIntent;
-
     private static final int PREF = 20;
     boolean stop = true;
 
@@ -36,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(this);
-
 
         getPref();
     }
@@ -67,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView tvIncoming = (TextView) findViewById(R.id.tvIncoming);
         tvIncoming.setText("INCOMING : GET http://"+MyHTTPD.SERVER+"/receive?fromNum=[num]&message=[message]");
+
     }
 
     public void startService() {
@@ -126,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ((Button) findViewById(R.id.btnStart)).setText("Start");
                 stop = true;
             }
-
         }
 
     }
