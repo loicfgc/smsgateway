@@ -42,13 +42,13 @@ public class MyService extends IntentService
     {
         super.onDestroy();
         server.stop();
-        Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Broker OFF", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        Toast.makeText(this, "Service starting", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Broker ON", Toast.LENGTH_SHORT).show();
 
         try {
             server = new MyHTTPD();

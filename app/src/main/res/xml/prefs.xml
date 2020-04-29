@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="Settings" >
+    <PreferenceCategory android:title="Paramètres broker">
         <EditTextPreference
-            android:defaultValue="8080"
+            android:defaultValue="7777"
             android:key="port"
-            android:summary="Listen port"
+            android:summary="Port du serveur broker"
             android:title="Port" />
 
         <EditTextPreference
-            android:defaultValue="Password"
+            android:defaultValue="EON"
             android:key="password"
-            android:summary="Password"
-            android:title="Password" />
+            android:summary="Sécurité pour l'envoi de requêtes"
+            android:title="Mot de passe" />
 
         <EditTextPreference
             android:defaultValue="100"
             android:key="limit"
-            android:summary="Limit of SMS"
-            android:title="Limit" />
+            android:summary="Nombre max de SMS pour une session"
+            android:title="Limite SMS" />
 
         <EditTextPreference
             android:defaultValue="127.0.0.1:8888"
             android:key="server"
-            android:summary="IP of server for incoming SMS"
-            android:title="Server" />
+            android:summary="IP du serveur pour les SMS entrants"
+            android:title="Serveur" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="onboot"
-            android:summary="Start on boot"
-            android:title="Start on boot" />
+            android:summary="Démarrer automatiquement l'application"
+            android:title="Auto Start" />
 
     </PreferenceCategory>
 

@@ -1,11 +1,15 @@
 package com.simplesmsgw.smsgateway;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Intent myServiceIntent;
     private static final int PREF = 20;
     boolean stop = true;
+    private static final int SMS_PERMISSION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +35,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(this);
+        checkPermission(Manifest.permission.SEND_SMS, SMS_PERMISSION);
 
         getPref();
     }
+    public void checkPermission(String permission, int requestCode)
+    {
+
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(
+                MainActivity.this,
+                permission)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(
+                            MainActivity.this,
+                            new String[] { permission },
+                            requestCode);
+        }
+        else {
+            Toast.makeText(MainActivity.this,
+                            "Les SMS sont fonctionnels !",
+                            Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
 
     public void getPref() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         int port = Integer.parseInt(pref.getString("port", 8080 + ""));
-        String password = pref.getString("password", "Password");
+        String password = pref.getString("password", "EON");
         int limit = Integer.parseInt(pref.getString("limit", 100 + ""));
         String server = pref.getString("server", "127.0.0.1:8888");
 
@@ -55,10 +83,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         TextView tvOutgoing = (TextView) findViewById(R.id.tvOutgoing);
-        tvOutgoing.setText("OUTGOING: GET http://"+ipAddress+":"+port+"/send?password="+password+"&toNum=[num]&message=[message]");
+        tvOutgoing.setText("Broker GET http://"+ipAddress+":"+port+"/send?password="+password+"&toNum=[num]&message=[message]");
 
-        TextView tvIncoming = (TextView) findViewById(R.id.tvIncoming);
-        tvIncoming.setText("INCOMING : GET http://"+MyHTTPD.SERVER+"/receive?fromNum=[num]&message=[message]");
+        //TextView tvIncoming = (TextView) findViewById(R.id.tvIncoming);
+       // tvIncoming.setText("INCOMING : GET http://"+MyHTTPD.SERVER+"/receive?fromNum=[num]&message=[message]");
 
     }
 
@@ -111,12 +139,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId() == R.id.btnStart) {
             if(stop) {
                 startService();
-                ((Button) findViewById(R.id.btnStart)).setText("Stop");
+                ((Button) findViewById(R.id.btnStart)).setText("Arreter le broker");
                 stop = false;
             }
             else {
                 stopService();
-                ((Button) findViewById(R.id.btnStart)).setText("Start");
+                ((Button) findViewById(R.id.btnStart)).setText("Démarrer le broker");
                 stop = true;
             }
         }

@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">SMSGateway</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">EON Broker</string>
+    <string name="action_settings">Paramètres</string>
 </resources>

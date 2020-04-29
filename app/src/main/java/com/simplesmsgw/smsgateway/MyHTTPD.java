@@ -48,7 +48,7 @@ public class MyHTTPD extends NanoHTTPD {
                         SmsManager smsManager = SmsManager.getDefault();
                         smsManager.sendTextMessage(toNum, null, message, null, null);
 
-                        String msg = "OK : " + number + "/" + LIMIT;
+                        String msg = "SEND : " + number + "/" + LIMIT;
                         number++;
 
                         return newFixedLengthResponse(msg);

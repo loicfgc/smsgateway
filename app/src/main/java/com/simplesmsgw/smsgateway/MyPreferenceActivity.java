@@ -13,10 +13,10 @@ public class MyPreferenceActivity extends PreferenceActivity implements Preferen
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.prefs);
-        bindPreferenceSummaryToValue(findPreference("port"));
-        bindPreferenceSummaryToValue(findPreference("password"));
-        bindPreferenceSummaryToValue(findPreference("limit"));
-        bindPreferenceSummaryToValue(findPreference("server"));
+        bindPreferenceSummaryToValue(findPreference("Port"));
+        bindPreferenceSummaryToValue(findPreference("Mot de passe"));
+        bindPreferenceSummaryToValue(findPreference("Limite SMS"));
+        bindPreferenceSummaryToValue(findPreference("Serveur"));
     }
 
     /**
