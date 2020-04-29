@@ -1,12 +1,15 @@
 package com.simplesmsgw.smsgateway;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int PREF = 20;
     boolean stop = true;
     private static final int SMS_PERMISSION = 100;
+    protected PowerManager.WakeLock mWakeLock;
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(this);
         checkPermission(Manifest.permission.SEND_SMS, SMS_PERMISSION);
+        /* This code together with the one in onDestroy()
+         * will make the screen be always on until this Activity gets destroyed. */
+        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        this.mWakeLock.acquire();
 
         getPref();
     }
@@ -83,7 +93,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         TextView tvOutgoing = (TextView) findViewById(R.id.tvOutgoing);
-        tvOutgoing.setText("Broker GET http://"+ipAddress+":"+port+"/send?password="+password+"&toNum=[num]&message=[message]");
+        tvOutgoing.setText("Pour envoyer un SMS - URL Broker");
+
+        TextView tvIncoming = (TextView) findViewById(R.id.tvIncoming);
+        tvIncoming.setText("http://"+ipAddress+":"+port+"/send?password="+password+"&toNum=[num]&message=[message]");
 
         //TextView tvIncoming = (TextView) findViewById(R.id.tvIncoming);
        // tvIncoming.setText("INCOMING : GET http://"+MyHTTPD.SERVER+"/receive?fromNum=[num]&message=[message]");
@@ -149,5 +162,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        this.mWakeLock.release();
+        super.onDestroy();
     }
 }
